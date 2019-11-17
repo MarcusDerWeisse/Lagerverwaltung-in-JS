@@ -1,0 +1,158 @@
+<html>
+    <body>
+        Was möchten Sie tun?<br>
+        1: Kiste anlegen<br>
+        2: Kiste löschen<br>
+        3: Kiste ändern<br>
+        4: Kistendaten anzeigen<br>
+        5: Alle Kisten in der Konsole auflisten<br>
+        Bitte Zahl eingeben: <input id="Eingabefeld" value="Nr. 1 - 5"><input type="button" value="Go" onclick="einlesen()"><br><br>
+        <p id="Ausgabe"></p>
+    <script>
+                
+        let kistenlager = [];
+            //kistenlager als zweidimensionales Array mit nullen initialisieren
+            for(i=0; i<=75;i++){
+                kistenlager[i] = [0,0,0,0];
+            }
+        
+        //Bedienung der Funktionen über Zifferneingabe
+        function einlesen(){
+            let eingabe = document.getElementById("Eingabefeld").value;
+            
+                switch(eingabe){
+                    case '1': kisteAnlegen(kistenlager);
+                                break;
+                    case '2': kisteLoeschen(kistenlager);
+                                break;
+                    case '3': kisteAendern(kistenlager);
+                                break;
+                    case '4': eineKisteAusgeben(kistenlager);
+                                break;
+                    case '5': alleAusgeben(kistenlager);
+                                break;
+                }
+        }
+
+        //ab hier Funktionen
+        //********************************************************************************************
+        function suchfunktion(kistenlager, gesuchtezahl) {
+			let lagerplatz = 0;
+			    while(lagerplatz <= 74 && gesuchtezahl != kistenlager[lagerplatz][0]){
+			    	lagerplatz++;
+		    	}//while schließen
+			return lagerplatz;
+		}//suchfunktion schließen
+
+        //********************************************************************************************
+        function kisteAnlegen(kistenlager){
+            let kistennummer;
+            let lagerplatz;
+            
+            //Abfrage der Kistennummer und abgleichen des Lagers ob die Nr schon vorhanden ist
+            kistennummer = prompt("Bitte Kistennummer eingeben:");
+            lagerplatz = suchfunktion(kistenlager, kistennummer);
+
+            if(lagerplatz == 75) {
+				//Nach freiem Lagerplatz suchen.
+                //Gibt 75 zurück, wenn die Nummer noch nicht vegeben ist. 
+				lagerplatz = suchfunktion(kistenlager, 0);
+									
+					//Wenn ein freier Platz gefunden wurde, Daten abfragen und speichern. Ansonsten ist das Lager voll.
+					if(lagerplatz < 75) {
+                        let breite, laenge, hoehe;
+                        breite = prompt("Bitte Kistenbreite in Meter eingeben.");
+                        laenge = prompt("Bitte Kistenlänge in Meter eingeben.");
+                        hoehe =	prompt("Bitte Kistenhöhe in Meter eingeben.");
+                        //Daten als zweidimensionales Array speichern			
+						kistenlager[lagerplatz] = [kistennummer, breite, laenge, hoehe];
+                        document.getElementById("Ausgabe").innerHTML = "Kiste angelegt auf Lagerplatz " + lagerplatz;
+					} else  
+                    document.getElementById("Ausgabe").innerHTML = "Kiste konnte nicht angelegt werden. Lager voll!";
+			} else
+            document.getElementById("Ausgabe").innerHTML ="Vorgang abgebrochen. Nr. bereits vergeben.";
+
+        }//kisteAnlegen schließen
+
+        //********************************************************************************************
+        function kisteLoeschen(kistenlager) {
+		//Lokale Variablen.
+		let loeschekiste;
+		let lagerplatz;
+		
+		//Abfrage nach Kistennumer, die gelöscht werden soll.
+		loeschekiste = prompt("Bitte Kisten-Nr. eingeben: ");
+
+			//Lagerplatz mit Hilfe der Kistennummer suchen
+			lagerplatz = suchfunktion(kistenlager, loeschekiste);
+			
+				if(lagerplatz < 75) {
+					kistenlager[lagerplatz][0] = 0;
+					document.getElementById("Ausgabe").innerHTML = "Kiste Nr. " + loeschekiste + " aus Lagerplatz " + lagerplatz + " entfernt.";
+				}else
+                document.getElementById("Ausgabe").innerHTML = "Kiste nicht vorhanden.";
+			
+	    }//kisteLoeschen schließen.
+        
+        //********************************************************************************************
+        function kisteAendern(kistenlager) {
+		//Lokale Variablen.
+		let kistennummer;
+		let lagerplatz = 0;
+			
+		//Abfrage nach Kiste, dessen Daten geändert werden sollen.
+		kistennummer = prompt("Bitte Kisten-Nr. eingeben");
+			
+			//Lagerplatz mit Hilfe der Kistennummer suchen
+			lagerplatz = suchfunktion(kistenlager, kistennummer);
+							
+				//Neue Kistendaten speichern
+				if(lagerplatz < 75) {
+					kistenlager[lagerplatz][1] = prompt("Bitte neue Kistenbreite in Meter eingeben. Bitte auf ganzen Wert aufrunden.");
+					kistenlager[lagerplatz][2] = prompt("Bitte neue Kistenlänge in Meter eingeben. Bitte auf ganzen Wert aufrunden.");
+					kistenlager[lagerplatz][3] = prompt("Bitte neue Kistenhöhe in Meter eingeben. Bitte auf ganzen Wert aufrunden.");
+					document.getElementById("Ausgabe").innerHTML = "Kiste auf folgendem Lagerplatz geändert: " + lagerplatz;
+				}else
+                document.getElementById("Ausgabe").innerHTML = "Kiste konnte nicht gefunden werden.";
+			
+	    }//kisteAendern schließen
+
+        //********************************************************************************************
+        function eineKisteAusgeben(kistenlager) {
+		//Lokale Variablen.
+		let kistennummer;
+		let lagerplatz = 0;
+		
+		//Abfrage nach Kiste, dessen Daten ausgegeben werden sollen
+		kistennummer = prompt("Bitte Kisten-Nr. eingeben");
+		
+			//Lagerplatz mit Hilfe der Kistennummer suchen
+			lagerplatz = suchfunktion(kistenlager, kistennummer);
+			
+				//Wurde die Kiste gefunden, werden die Daten aus dem Array ausgegeben.
+				if(lagerplatz < 75) {
+					document.getElementById("Ausgabe").innerHTML = "Lagerplatz: " + lagerplatz + " Kistennr.: " + kistenlager[lagerplatz][0] + " Breite: " + kistenlager[lagerplatz][1] + " Länge: " + kistenlager[lagerplatz][2] + " Höhe: " + kistenlager[lagerplatz][3];
+				}else 
+                document.getElementById("Ausgabe").innerHTML = "Kiste konnte nicht gefunden werden.";
+		
+	    }//eineKisteAusgeben schließen
+
+        //********************************************************************************************
+        function alleAusgeben(kistenlager) {
+            
+            //Lokale Variable.
+            let lagerplatz = 0;
+            
+            //Kisten auflisten.
+            while(lagerplatz < 75){
+                if(kistenlager[lagerplatz][0] != 0)
+                    console.log("Lagerplatz: " + lagerplatz + " Kistennr.: " + kistenlager[lagerplatz][0] + " Breite: " + kistenlager[lagerplatz][1] + " Länge: " + kistenlager[lagerplatz][2] + " Höhe: " + kistenlager[lagerplatz][3]);
+                
+                lagerplatz++;
+		    }//while schließen
+            document.getElementById("Ausgabe").innerHTML = "Kistendaten in Konsole aufgeführt.";
+	    }//alleAusgeben schließen
+   
+    </script>
+    </body>
+</html>
